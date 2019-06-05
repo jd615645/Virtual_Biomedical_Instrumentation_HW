@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Labview Final</title>
+  <link rel="shortcut icon" href="./img/favicon.ico">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/loading.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+      <img src="./img/pie-chart.png" width="30" height="30" alt="">
+    </a>
+  </nav>
+
+  <div id="app" v-cloak>
+    <div class="container-body">
+      <div class="form-group mt-4">
+        <label for="inputCSV">選取檔案</label>
+        <input type="file" id="inputCSV" class="form-control-file" accept=".csv" @change="onFileChange">
+      </div>
+      <div id="dashboard">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card info-card">
+              <div class="row no-gutters">
+                <div class="col-4">
+                  <img src="./img/heartbeat.png" class="card-img">
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">Heart Rate</h5>
+                    <p class="card-text">{{ heart_rate }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card info-card">
+              <div class="row no-gutters">
+                <div class="col-4">
+                  <img src="./img/examination.png" class="card-img">
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">心率是否正常</h5>
+                    <p class="card-text">{{ health_heart_rate ? '是' : '否' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card info-card">
+              <div class="row no-gutters">
+                <div class="col-4">
+                  <img src="./img/ecg-lines.png" class="card-img">
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">SDNN</h5>
+                    <p class="card-text">{{ sdnn }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card info-card">
+              <div class="row no-gutters">
+                <div class="col-4">
+                  <img src="./img/ecg-lines.png" class="card-img">
+                </div>
+                <div class="col-8">
+                  <div class="card-body">
+                    <h5 class="card-title">PN50</h5>
+                    <p class="card-text">{{ PN50 }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card card-hrv">
+              <div class="card-body">
+                <h5 class="card-title">LF</h5>
+                <p class="card-text">{{ lf }} %</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-hrv">
+              <div class="card-body">
+                <h5 class="card-title">HF</h5>
+                <p class="card-text">{{ hf }} %</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-hrv">
+              <div class="card-body">
+                <h5 class="card-title">LF/HF</h5>
+                <p class="card-text">{{ lf_hf }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card card-comment">
+              <div class="card-body">
+                <h5 class="card-title">評語</h5>
+                <p class="card-text">{{ comment }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" id="lineChartGroup">
+          <div v-if="loading">
+            <div class="pulse"></div>
+          </div>
+          <div class="col-md-6" v-for="chart in lineCharts" v-else>
+            <line-chart :title="chart.title" :chartid="chart.chartid" :chart-data="chart.data"></line-chart>
+          </div>
+        </div>
+        <div class="row" id="areaChartGroup">
+          <div v-if="loading">
+            <div class="pulse"></div>
+          </div>
+          <div class="col-md-6" v-for="chart in areaCharts" v-else>
+            <area-chart :title="chart.title" :chartid="chart.chartid" :chart-data="chart.data" :xaxis-categories="chart.xAxisCategories"></area-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- script libs -->
+  <script src="./js/highcharts.js"></script>
+  <script src="./js/lodash.min.js"></script>
+  <script src="./js/papaparse.min.js"></script>
+  <script src="./js/sweetalert.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
